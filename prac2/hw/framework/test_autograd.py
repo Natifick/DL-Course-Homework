@@ -1,5 +1,5 @@
 import torch
-from autograd import Value
+from framework.autograd import Value
 
 def test_sanity_check():
 

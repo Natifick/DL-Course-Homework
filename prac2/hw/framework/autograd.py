@@ -1,4 +1,5 @@
 import torch
+from torch.autograd import Function
 
 
 class Exp(Function):
@@ -31,14 +32,15 @@ class Exp(Function):
         return grad_output * result * (1 - result)
 
 
-class Softmax:
-    """ simple softmax implementation """
-    @staticmethod(ctx, i):
+class Softmax(Function):
+    """ simple softmax implementation with torch autograd """
+    
+    @staticmethod
     def forward(ctx, i):
         """
             softmax = e^x_i / sum_i(e^x)
         """
-        result = i.exp() / i.exp().sum(dim=1)
+        result = i.exp() / i.exp().sum()
         ctx.save_for_backward(result)
         return result
     
@@ -101,6 +103,34 @@ class Value:
             self.grad += out.grad if self.data > 0 else 0
         out._backward = _backward
 
+        return out
+    
+    def exp(self):
+        out = Value(self.data.exp(), (self,), 'exp')
+        
+        def _backward():
+            self.grad = out.grad * self.data.exp()
+        out._backward = _backward
+        
+        return out
+    
+    def sum(self, axes=None):
+        out = Value(self.data.sum(axes), (self,), 'sum')
+        
+        # Чтобы восстановить градиент делаем вот это
+        if axes is None:
+            new_shape = [1 for i in out.data.shape]
+        else:
+            new_shape = list(out.data.shape)
+            if axes is not list and axes is not tuple:
+                axes = [axes]
+            for i in axes:
+                new_shape.insert(i, 1) 
+        
+        def _backward():
+            self.grad = out.grad.reshape(new_shape).broadcast_to(self.data.shape)
+        out._backward = _backward
+        
         return out
 
     def backward(self):

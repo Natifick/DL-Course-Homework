@@ -1,5 +1,5 @@
 import random
-from hw.tools import *
+from framework.autograd import Value
 
 class Module:
 
@@ -9,6 +9,14 @@ class Module:
 
     def parameters(self):
         return []
+
+
+def autoSoftmax(x: Value, dim=0):
+    """ Simple softmax implementation with my own autograd """
+    e = x.exp()
+    print(e)
+    return e / e.sum(dim)
+
 
 class Neuron(Module):
     #                  nin hao ma
