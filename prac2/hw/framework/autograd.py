@@ -29,7 +29,7 @@ class Exp(Function):
             with respect to the input.
         """
         result, = ctx.saved_tensors
-        return grad_output * result * (1 - result)
+        return grad_output * result
 
 
 class Softmax(Function):
@@ -49,7 +49,7 @@ class Softmax(Function):
             derivative = res * (1 - res)
         """
         result, = ctx.saved_tensors
-        return grad_output * result
+        return grad_output * result * (1 - result)
 
 
 class Value:
@@ -109,15 +109,15 @@ class Value:
         out = Value(self.data.exp(), (self,), 'exp')
         
         def _backward():
-            self.grad = out.grad * self.data.exp()
+            self.grad += out.grad * self.data.exp()
         out._backward = _backward
         
         return out
     
-    def sum(self, axes=None):
+    def sum(self, axes=0):
         out = Value(self.data.sum(axes), (self,), 'sum')
         
-        # Чтобы восстановить градиент делаем вот это
+        # Чтобы восстановить градиент считаем все съеденные оси
         if axes is None:
             new_shape = [1 for i in out.data.shape]
         else:
@@ -128,9 +128,22 @@ class Value:
                 new_shape.insert(i, 1) 
         
         def _backward():
-            self.grad = out.grad.reshape(new_shape).broadcast_to(self.data.shape)
+            self.grad += torch.tensor(out.grad).reshape(new_shape).broadcast_to(self.data.shape)
+        
         out._backward = _backward
         
+        return out
+    
+    def broadcast(self, new_shape):
+        out = Value(self.data.broadcast_to(new_shape), (self,), 'broadcast')
+        
+        # Соберём, какие оси нужно будет просуммировать
+        b_shape = [-1]*(len(new_shape) - len(self.data.shape)) + list(self.data.shape)
+        axes = [i for i in range(len(new_shape)) if new_shape[i] != b_shape[i]]
+        
+        def _backward():
+            self.grad += out.grad.sum(tuple(axes)).reshape(self.data.shape)
+        out._backward = _backward
         return out
 
     def backward(self):

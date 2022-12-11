@@ -14,8 +14,7 @@ class Module:
 def autoSoftmax(x: Value, dim=0):
     """ Simple softmax implementation with my own autograd """
     e = x.exp()
-    print(e)
-    return e / e.sum(dim)
+    return e / e.sum(dim).broadcast(x.data.shape)
 
 
 class Neuron(Module):

@@ -1,0 +1,49 @@
+{
+    "os": "Windows-10-10.0.19044-SP0",
+    "python": "3.9.13",
+    "heartbeatAt": "2022-12-10T19:54:32.520015",
+    "startedAt": "2022-12-10T19:54:31.460014",
+    "docker": null,
+    "cuda": null,
+    "args": null,
+    "state": "running",
+    "program": "\u0423\u0447\u0435\u0431\u043d\u044b\u0435 \u043f\u0430\u043f\u043a\u0438/course/prac2/hw/solution.ipynb",
+    "root": "D:/YandexDisk/\u041a\u043e\u043c\u043f\u044c\u044e\u0442\u0435\u0440 NIKITA-LAPTOP/Documents/\u0423\u0447\u0435\u0431\u043d\u044b\u0435 \u043f\u0430\u043f\u043a\u0438/course",
+    "git": {
+        "remote": "git@github.com:Natifick/DL-Course-Homework.git",
+        "commit": "bf23841ad190d2e8d473a3770c1f07e310612a3b"
+    },
+    "email": "nikitakhor@gmail.com",
+    "host": "Natifick",
+    "username": "Professional",
+    "executable": "C:\\Users\\Professional\\anaconda3\\python.exe",
+    "cpu_count": 6,
+    "cpu_count_logical": 12,
+    "cpu_freq": {
+        "current": 2808.0,
+        "min": 0.0,
+        "max": 2808.0
+    },
+    "cpu_freq_per_core": [
+        {
+            "current": 2808.0,
+            "min": 0.0,
+            "max": 2808.0
+        }
+    ],
+    "disk": {
+        "total": 930.9205703735352,
+        "used": 774.4606056213379
+    },
+    "gpu": "NVIDIA GeForce GTX 1650",
+    "gpu_count": 1,
+    "gpu_devices": [
+        {
+            "name": "NVIDIA GeForce GTX 1650",
+            "memory_total": 4294967296
+        }
+    ],
+    "memory": {
+        "total": 15.858726501464844
+    }
+}
